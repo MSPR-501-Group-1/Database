@@ -1,324 +1,324 @@
-CREATE TABLE health_goal(
-   goal_id VARCHAR(50),
-   label VARCHAR(50),
-   description VARCHAR(50),
-   PRIMARY KEY(goal_id)
+-- ============================================================
+--  Schéma PostgreSQL — Application Santé & Fitness
+--  Généré et corrigé pour PostgreSQL
+-- ============================================================
+
+-- Extensions utiles
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- ------------------------------------------------------------
+-- Tables de référence / dictionnaires
+-- ------------------------------------------------------------
+
+CREATE TABLE health_goal (
+    goal_id     VARCHAR(50) PRIMARY KEY,
+    label       VARCHAR(50),
+    description VARCHAR(255)
 );
 
-CREATE TABLE Subscription_plan(
-   plan_id VARCHAR(50),
-   name VARCHAR(50),
-   monthly_price INT,
-   durations_month DATE,
-   features_json VARCHAR(50),
-   is_active LOGICAL,
-   PRIMARY KEY(plan_id)
+CREATE TABLE subscription_plan (
+    plan_id         VARCHAR(50) PRIMARY KEY,
+    name            VARCHAR(50),
+    monthly_price   NUMERIC(10,2),
+    duration_months INT,
+    features_json   JSONB,
+    is_active       BOOLEAN DEFAULT TRUE
 );
 
-CREATE TABLE food(
-   food_id VARCHAR(50),
-   name VARCHAR(50),
-   brand VARCHAR(50),
-   calories_100g DECIMAL(15,2),
-   fat_100g DECIMAL(15,2),
-   nutriscore INT,
-   category_ref VARCHAR(50),
-   fiber_g DECIMAL(15,2),
-   sugar_g DECIMAL(15,2),
-   sodium_mg DECIMAL(15,2),
-   cholesterol_mg DECIMAL(15,2),
-   protein_100g DECIMAL(15,2),
-   carbs_100g DECIMAL(15,2),
-   PRIMARY KEY(food_id)
+CREATE TABLE food (
+    food_id          VARCHAR(50) PRIMARY KEY,
+    name             VARCHAR(100),
+    brand            VARCHAR(100),
+    calories_100g    NUMERIC(8,2),
+    fat_100g         NUMERIC(8,2),
+    nutriscore       INT,
+    category_ref     VARCHAR(50),
+    fiber_g          NUMERIC(8,2),
+    sugar_g          NUMERIC(8,2),
+    sodium_mg        NUMERIC(8,2),
+    cholesterol_mg   NUMERIC(8,2),
+    protein_100g     NUMERIC(8,2),
+    carbs_100g       NUMERIC(8,2)
 );
 
-CREATE TABLE activity_type(
-   activity_id VARCHAR(50),
-   name VARCHAR(50),
-   met_value INT,
-   icon_url VARCHAR(50),
-   PRIMARY KEY(activity_id)
+CREATE TABLE activity_type (
+    activity_id VARCHAR(50) PRIMARY KEY,
+    name        VARCHAR(100),
+    met_value   NUMERIC(5,2),
+    icon_url    VARCHAR(255)
 );
 
-CREATE TABLE excercise(
-   excercie_id VARCHAR(50),
-   name VARCHAR(50),
-   body_part_target VARCHAR(50),
-   video_url VARCHAR(50),
-   description VARCHAR(50),
-   difficulty_level INT,
-   equipment_required VARCHAR(50),
-   category VARCHAR(50),
-   PRIMARY KEY(excercie_id)
+CREATE TABLE exercise (
+    exercise_id        VARCHAR(50) PRIMARY KEY,
+    name               VARCHAR(100),
+    body_part_target   VARCHAR(100),
+    video_url          VARCHAR(255),
+    description        TEXT,
+    difficulty_level   INT,
+    equipment_required VARCHAR(100),
+    category           VARCHAR(50)
 );
 
-CREATE TABLE data_source(
-   source_id VARCHAR(50),
-   source_name VARCHAR(50),
-   source_type VARCHAR(50),
-   format VARCHAR(50),
-   source_url VARCHAR(50),
-   expected_records VARCHAR(50),
-   last_updates DATETIME,
-   is_active LOGICAL,
-   PRIMARY KEY(source_id)
+-- ------------------------------------------------------------
+-- ETL / Qualité des données
+-- ------------------------------------------------------------
+
+CREATE TABLE data_source (
+    source_id        VARCHAR(50) PRIMARY KEY,
+    source_name      VARCHAR(100),
+    source_type      VARCHAR(50),
+    format           VARCHAR(50),
+    source_url       VARCHAR(255),
+    expected_records INT,
+    last_updated     TIMESTAMP,
+    is_active        BOOLEAN DEFAULT TRUE
 );
 
-CREATE TABLE etl_execution(
-   execution_id VARCHAR(50),
-   started_at DATETIME,
-   ended_at DATETIME,
-   status LOGICAL,
-   records_extracted LOGICAL,
-   records_loaded LOGICAL,
-   records_rejected LOGICAL,
-   error_message VARCHAR(50),
-   triggered_by VARCHAR(50),
-   source_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(execution_id),
-   FOREIGN KEY(source_id) REFERENCES data_source(source_id)
+CREATE TABLE etl_execution (
+    execution_id      VARCHAR(50) PRIMARY KEY,
+    started_at        TIMESTAMP,
+    ended_at          TIMESTAMP,
+    status            VARCHAR(20),
+    records_extracted INT,
+    records_loaded    INT,
+    records_rejected  INT,
+    error_message     TEXT,
+    triggered_by      VARCHAR(100),
+    source_id         VARCHAR(50) NOT NULL REFERENCES data_source(source_id)
 );
 
-CREATE TABLE data_quality_check_(
-   check_id VARCHAR(50),
-   target_table VARCHAR(50),
-   check_type VARCHAR(50),
-   check_rule VARCHAR(50),
-   records_checked VARCHAR(50),
-   records_failed VARCHAR(50),
-   checked_at DATETIME,
-   status LOGICAL,
-   execution_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(check_id),
-   FOREIGN KEY(execution_id) REFERENCES etl_execution(execution_id)
+CREATE TABLE data_quality_check (
+    check_id         VARCHAR(50) PRIMARY KEY,
+    target_table     VARCHAR(100),
+    check_type       VARCHAR(50),
+    check_rule       TEXT,
+    records_checked  INT,
+    records_failed   INT,
+    checked_at       TIMESTAMP,
+    status           VARCHAR(20),
+    execution_id     VARCHAR(50) NOT NULL REFERENCES etl_execution(execution_id)
 );
 
-CREATE TABLE data_anomaly(
-   anomaly_id VARCHAR(50),
-   source_table VARCHAR(50),
-   anomaly_table VARCHAR(50),
-   field_name VARCHAR(50),
-   record_identifier VARCHAR(50),
-   original_value VARCHAR(50),
-   detected_at DATETIME,
-   seerity VARCHAR(50),
-   is_resolved LOGICAL,
-   resolution_action VARCHAR(50),
-   check_id VARCHAR(50),
-   execution_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(anomaly_id),
-   FOREIGN KEY(check_id) REFERENCES data_quality_check_(check_id),
-   FOREIGN KEY(execution_id) REFERENCES etl_execution(execution_id)
+CREATE TABLE data_anomaly (
+    anomaly_id         VARCHAR(50) PRIMARY KEY,
+    source_table       VARCHAR(100),
+    anomaly_type       VARCHAR(100),
+    field_name         VARCHAR(100),
+    record_identifier  VARCHAR(100),
+    original_value     TEXT,
+    detected_at        TIMESTAMP,
+    severity           VARCHAR(20),
+    is_resolved        BOOLEAN DEFAULT FALSE,
+    resolution_action  TEXT,
+    check_id           VARCHAR(50) REFERENCES data_quality_check(check_id),
+    execution_id       VARCHAR(50) NOT NULL REFERENCES etl_execution(execution_id)
 );
 
-CREATE TABLE user_profile(
-   profile_id VARCHAR(50),
-   height_cm INT,
-   current_weight_kg DECIMAL(3,2),
-   activity_level_ref VARCHAR(50),
-   allergies_json VARCHAR(50),
-   preferences_json VARCHAR(50),
-   updated_at DATETIME,
-   goal_id VARCHAR(50),
-   PRIMARY KEY(profile_id),
-   FOREIGN KEY(goal_id) REFERENCES health_goal(goal_id)
+-- ------------------------------------------------------------
+-- Utilisateurs & Profils
+-- ------------------------------------------------------------
+
+CREATE TABLE user_profile (
+    profile_id          VARCHAR(50) PRIMARY KEY,
+    height_cm           INT,
+    current_weight_kg   NUMERIC(5,2),
+    activity_level_ref  VARCHAR(50),
+    allergies_json      JSONB,
+    preferences_json    JSONB,
+    updated_at          TIMESTAMP,
+    goal_id             VARCHAR(50) REFERENCES health_goal(goal_id)
 );
 
-CREATE TABLE user_(
-   user_id VARCHAR(50),
-   email VARCHAR(50),
-   password_bash VARCHAR(20),
-   first_name VARCHAR(50),
-   last_name VARCHAR(50),
-   birth_date DATE,
-   gender_code INT,
-   created_at DATE,
-   is_active LOGICAL,
-   role_code INT,
-   profile_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(user_id),
-   UNIQUE(profile_id),
-   FOREIGN KEY(profile_id) REFERENCES user_profile(profile_id)
+CREATE TABLE user_ (
+    user_id         VARCHAR(50) PRIMARY KEY,
+    email           VARCHAR(100) UNIQUE NOT NULL,
+    password_hash   VARCHAR(255),
+    first_name      VARCHAR(50),
+    last_name       VARCHAR(50),
+    birth_date      DATE,
+    gender_code     INT,
+    created_at      TIMESTAMP DEFAULT NOW(),
+    is_active       BOOLEAN DEFAULT TRUE,
+    role_code       VARCHAR(20) DEFAULT 'USER',
+    profile_id VARCHAR(50) UNIQUE REFERENCES user_profile(profile_id)
 );
 
-CREATE TABLE subsrciption(
-   subscription_id VARCHAR(50),
-   start_date DATE,
-   end_date DATE,
-   status LOGICAL,
-   auto_renew LOGICAL,
-   plan_id VARCHAR(50) NOT NULL,
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(subscription_id),
-   FOREIGN KEY(plan_id) REFERENCES Subscription_plan(plan_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+-- ------------------------------------------------------------
+-- Abonnements & Facturation
+-- ------------------------------------------------------------
+
+CREATE TABLE subscription (
+    subscription_id VARCHAR(50) PRIMARY KEY,
+    start_date      DATE,
+    end_date        DATE,
+    status          VARCHAR(20),
+    auto_renew      BOOLEAN DEFAULT FALSE,
+    plan_id         VARCHAR(50) NOT NULL REFERENCES subscription_plan(plan_id),
+    user_id         VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE invoice(
-   invoice_id VARCHAR(50),
-   issued_at DATETIME,
-   total_amount CURRENCY,
-   status LOGICAL,
-   pdf_url VARCHAR(50),
-   subscription_id VARCHAR(50),
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(invoice_id),
-   FOREIGN KEY(subscription_id) REFERENCES subsrciption(subscription_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+CREATE TABLE invoice (
+    invoice_id      VARCHAR(50) PRIMARY KEY,
+    issued_at       TIMESTAMP,
+    total_amount    NUMERIC(10,2),
+    status          VARCHAR(20),
+    pdf_url         VARCHAR(255),
+    subscription_id VARCHAR(50) REFERENCES subscription(subscription_id),
+    user_id         VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE payment_transaction(
-   transaction_id VARCHAR(50),
-   processed_at DATETIME,
-   amount CURRENCY,
-   payment_method INT,
-   transaction_ref_ext VARCHAR(50),
-   status LOGICAL,
-   invoice_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(transaction_id),
-   FOREIGN KEY(invoice_id) REFERENCES invoice(invoice_id)
+CREATE TABLE payment_transaction (
+    transaction_id      VARCHAR(50) PRIMARY KEY,
+    processed_at        TIMESTAMP,
+    amount              NUMERIC(10,2),
+    payment_method      VARCHAR(50),
+    transaction_ref_ext VARCHAR(100),
+    status              VARCHAR(20),
+    invoice_id          VARCHAR(50) NOT NULL REFERENCES invoice(invoice_id)
 );
 
-CREATE TABLE recipe(
-   recipe_id VARCHAR(50),
-   title VARCHAR(50),
-   instructions VARCHAR(50),
-   prep_time_min COUNTER,
-   difficulty INT,
-   created_by_user_id LOGICAL,
-   user_id VARCHAR(50),
-   PRIMARY KEY(recipe_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+-- ------------------------------------------------------------
+-- Alimentation
+-- ------------------------------------------------------------
+
+CREATE TABLE recipe (
+    recipe_id          VARCHAR(50) PRIMARY KEY,
+    title              VARCHAR(100),
+    instructions       TEXT,
+    prep_time_min      INT,
+    difficulty         INT,
+    created_by_user    BOOLEAN DEFAULT FALSE,
+    user_id            VARCHAR(50) REFERENCES user_(user_id)
 );
 
-CREATE TABLE recipe_ingredient(
-   link_id VARCHAR(50),
-   quantity_grams INT,
-   recipe_id VARCHAR(50) NOT NULL,
-   food_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(link_id),
-   FOREIGN KEY(recipe_id) REFERENCES recipe(recipe_id),
-   FOREIGN KEY(food_id) REFERENCES food(food_id)
+CREATE TABLE recipe_ingredient (
+    link_id        VARCHAR(50) PRIMARY KEY,
+    quantity_grams NUMERIC(8,2),
+    recipe_id      VARCHAR(50) NOT NULL REFERENCES recipe(recipe_id),
+    food_id        VARCHAR(50) NOT NULL REFERENCES food(food_id)
 );
 
-CREATE TABLE food_diary_entry(
-   entry_id VARCHAR(50),
-   consumed_at DATE,
-   quantity_grams INT,
-   meal_type LOGICAL,
-   calories_consumed INT,
-   food_id VARCHAR(50) NOT NULL,
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(entry_id),
-   FOREIGN KEY(food_id) REFERENCES food(food_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+CREATE TABLE food_diary_entry (
+    entry_id          VARCHAR(50) PRIMARY KEY,
+    consumed_at       TIMESTAMP,
+    quantity_grams    NUMERIC(8,2),
+    meal_type         VARCHAR(20),
+    calories_consumed NUMERIC(8,2),
+    food_id           VARCHAR(50) NOT NULL REFERENCES food(food_id),
+    user_id           VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE workout_session(
-   session_id VARCHAR(50),
-   start_time DATE,
-   duration_time COUNTER,
-   calories_burned INT,
-   notes VARCHAR(50),
-   distance_km DECIMAL(15,2),
-   activity_id VARCHAR(50) NOT NULL,
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(session_id),
-   FOREIGN KEY(activity_id) REFERENCES activity_type(activity_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+-- ------------------------------------------------------------
+-- Activité physique
+-- ------------------------------------------------------------
+
+CREATE TABLE workout_session (
+    session_id     VARCHAR(50) PRIMARY KEY,
+    start_time     TIMESTAMP,
+    duration_min   INT,
+    calories_burned NUMERIC(8,2),
+    notes          TEXT,
+    distance_km    NUMERIC(8,2),
+    activity_id    VARCHAR(50) NOT NULL REFERENCES activity_type(activity_id),
+    user_id        VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE session_detail(
-   detail_id VARCHAR(50),
-   sets INT,
-   reps INT,
-   weight_kg INT,
-   excercie_id VARCHAR(50) NOT NULL,
-   session_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(detail_id),
-   FOREIGN KEY(excercie_id) REFERENCES excercise(excercie_id),
-   FOREIGN KEY(session_id) REFERENCES workout_session(session_id)
+CREATE TABLE session_detail (
+    detail_id   VARCHAR(50) PRIMARY KEY,
+    sets        INT,
+    reps        INT,
+    weight_kg   NUMERIC(6,2),
+    exercise_id VARCHAR(50) NOT NULL REFERENCES exercise(exercise_id),
+    session_id  VARCHAR(50) NOT NULL REFERENCES workout_session(session_id)
 );
 
-CREATE TABLE connected_device(
-   device_id VARCHAR(50),
-   device_name VARCHAR(50),
-   device_type VARCHAR(50),
-   last_synce DATE,
-   is_active LOGICAL,
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(device_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+-- ------------------------------------------------------------
+-- Appareils connectés & Métriques
+-- ------------------------------------------------------------
+
+CREATE TABLE connected_device (
+    device_id   VARCHAR(50) PRIMARY KEY,
+    device_name VARCHAR(100),
+    device_type VARCHAR(50),
+    last_synced TIMESTAMP,
+    is_active   BOOLEAN DEFAULT TRUE,
+    user_id     VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE biometric_measure(
-   measure_id VARCHAR(50),
-   type VARCHAR(50),
-   value_ INT,
-   measured_at DATETIME,
-   device_id VARCHAR(50),
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(measure_id),
-   FOREIGN KEY(device_id) REFERENCES connected_device(device_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+CREATE TABLE biometric_measure (
+    measure_id  VARCHAR(50) PRIMARY KEY,
+    type        VARCHAR(50),
+    value_      NUMERIC(10,2),
+    measured_at TIMESTAMP,
+    device_id   VARCHAR(50) REFERENCES connected_device(device_id),
+    user_id     VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE ai_recommendation(
-   recommendation_id VARCHAR(50),
-   generated_at DATETIME,
-   category VARCHAR(50),
-   title VARCHAR(50),
-   content_text VARCHAR(200),
-   confidence_score DECIMAL(15,2),
-   is_viewed LOGICAL,
-   feedback_rating DECIMAL(15,2),
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(recommendation_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+CREATE TABLE user_metrics (
+    metric_id            VARCHAR(50) PRIMARY KEY,
+    recorded_date        DATE,
+    weight_kg            NUMERIC(5,2),
+    body_fat_percentage  NUMERIC(5,2),
+    steps                INT,
+    calories_burned      NUMERIC(8,2),
+    heart_rate_avg       INT,
+    heart_rate_max       INT,
+    sleep_hours          NUMERIC(4,2),
+    created_at           TIMESTAMP DEFAULT NOW(),
+    user_id              VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE progress_tracker(
-   progress_id VARCHAR(50),
-   weight_kg DECIMAL(15,2),
-   body_fat_pourcentage DECIMAL(15,2),
-   weekly_calories_avg DECIMAL(15,2),
-   created_at DATETIME,
-   goal_achievement_json VARCHAR(50),
-   wekkly_workouts_count INT,
-   tracking_date DATE,
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(progress_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+-- ------------------------------------------------------------
+-- Suivi & Recommandations
+-- ------------------------------------------------------------
+
+CREATE TABLE progress_tracker (
+    progress_id             VARCHAR(50) PRIMARY KEY,
+    weight_kg               NUMERIC(5,2),
+    body_fat_percentage     NUMERIC(5,2),
+    weekly_calories_avg     NUMERIC(8,2),
+    created_at              TIMESTAMP DEFAULT NOW(),
+    goal_achievement_json   JSONB,
+    weekly_workouts_count   INT,
+    tracking_date           DATE,
+    user_id                 VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE user_metrics(
-   metric_id VARCHAR(50),
-   recorded_date DATE,
-   weight_kg DECIMAL(15,2),
-   body_fat_pourcentage INT,
-   steps INT,
-   calories_burned DECIMAL(15,2),
-   heart_rate_avg INT,
-   heart_rate_max INT,
-   sleep_hours INT,
-   created_at DATETIME,
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(metric_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+CREATE TABLE ai_recommendation (
+    recommendation_id VARCHAR(50) PRIMARY KEY,
+    generated_at      TIMESTAMP,
+    category          VARCHAR(50),
+    title             VARCHAR(100),
+    content_text      TEXT,
+    confidence_score  NUMERIC(4,3),
+    is_viewed         BOOLEAN DEFAULT FALSE,
+    feedback_rating   NUMERIC(3,2),
+    user_id           VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
 
-CREATE TABLE diet_recommendation(
-   recommendation_id VARCHAR(50),
-   meal_type LOGICAL,
-   recommended_foods VARCHAR(50),
-   total_calories INT,
-   protein_g INT,
-   carbs_g INT,
-   fat_g INT,
-   diet_type LOGICAL,
-   generated_at DATETIME,
-   is_followed LOGICAL,
-   user_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(recommendation_id),
-   FOREIGN KEY(user_id) REFERENCES user_(user_id)
+CREATE TABLE diet_recommendation (
+    recommendation_id  VARCHAR(50) PRIMARY KEY,
+    meal_type          VARCHAR(20),
+    recommended_foods  TEXT,
+    total_calories     INT,
+    protein_g          NUMERIC(8,2),
+    carbs_g            NUMERIC(8,2),
+    fat_g              NUMERIC(8,2),
+    diet_type          VARCHAR(50),
+    generated_at       TIMESTAMP,
+    is_followed        BOOLEAN DEFAULT FALSE,
+    user_id            VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
+
+-- ============================================================
+-- Index recommandés pour les performances
+-- ============================================================
+
+CREATE INDEX idx_user_email              ON user_(email);
+CREATE INDEX idx_food_diary_user         ON food_diary_entry(user_id, consumed_at);
+CREATE INDEX idx_workout_session_user    ON workout_session(user_id, start_time);
+CREATE INDEX idx_biometric_user         ON biometric_measure(user_id, measured_at);
+CREATE INDEX idx_user_metrics_user      ON user_metrics(user_id, recorded_date);
+CREATE INDEX idx_subscription_user      ON subscription(user_id);
+CREATE INDEX idx_etl_execution_source   ON etl_execution(source_id);
+CREATE INDEX idx_anomaly_execution      ON data_anomaly(execution_id);
