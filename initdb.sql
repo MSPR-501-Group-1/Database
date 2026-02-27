@@ -84,12 +84,12 @@ CREATE TABLE data_source (
 );
 
 CREATE TABLE society (
-    id_society VARCHAR(50) PRIMARY KEY,
+    society_id VARCHAR(50) PRIMARY KEY,
     name       VARCHAR(100)
 );
 
 CREATE TABLE history (
-    id_history VARCHAR(50) PRIMARY KEY
+    history_id VARCHAR(50) PRIMARY KEY
 );
 
 CREATE TABLE user_metrics (
@@ -167,15 +167,15 @@ CREATE TABLE user_profile (
 CREATE TABLE user_ (
     user_id       VARCHAR(50) PRIMARY KEY,
     email         VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255),         -- corrigé : taille 20 trop courte pour un hash bcrypt
+    password_hash VARCHAR(255),
     first_name    VARCHAR(50),
     last_name     VARCHAR(50),
     birth_date    DATE,
     gender_code   INT,
     created_at    TIMESTAMP DEFAULT NOW(),
     is_active     BOOLEAN DEFAULT TRUE,
-    role_code     VARCHAR(20) DEFAULT 'USER',  -- corrigé : INT → VARCHAR
-    id_history    VARCHAR(50) UNIQUE REFERENCES history(id_history),
+    role_code     VARCHAR(20) DEFAULT 'USER',
+    history_id    VARCHAR(50) UNIQUE REFERENCES history(history_id),
     profile_id    VARCHAR(50) UNIQUE REFERENCES user_profile(profile_id)
 );
 
@@ -246,7 +246,7 @@ CREATE TABLE session_detail (
 CREATE TABLE biometric_measure (
     measure_id  VARCHAR(50) PRIMARY KEY,
     type        VARCHAR(50),
-    value_      NUMERIC(10,2),          -- corrigé : INT → NUMERIC
+    value_      NUMERIC(10,2),
     measured_at TIMESTAMP,
     user_id     VARCHAR(50) NOT NULL REFERENCES user_(user_id)
 );
@@ -269,13 +269,13 @@ CREATE TABLE ai_recommendation (
 
 CREATE TABLE diet_recommendation (
     recommendation_id VARCHAR(50) PRIMARY KEY,
-    meal_type         VARCHAR(20),      -- corrigé : LOGICAL → VARCHAR
+    meal_type         VARCHAR(20),
     recommended_foods TEXT,
     total_calories    INT,
     protein_g         NUMERIC(8,2),
     carbs_g           NUMERIC(8,2),
     fat_g             NUMERIC(8,2),
-    diet_type         VARCHAR(50),      -- corrigé : LOGICAL → VARCHAR ('vegan', 'keto'…)
+    diet_type         VARCHAR(50),
     generated_at      TIMESTAMP,
     is_followed       BOOLEAN DEFAULT FALSE,
     user_id           VARCHAR(50) NOT NULL REFERENCES user_(user_id)
@@ -311,16 +311,16 @@ CREATE TABLE records (
     PRIMARY KEY (device_id, measure_id)
 );
 
-CREATE TABLE parts_of (                 -- corrigé : "Parts_of" → parts_of (minuscules)
+CREATE TABLE parts_of (
     user_id    VARCHAR(50) REFERENCES user_(user_id),
-    id_society VARCHAR(50) REFERENCES society(id_society),
-    PRIMARY KEY (user_id, id_society)
+    society_id VARCHAR(50) REFERENCES society(society_id),
+    PRIMARY KEY (user_id, society_id)
 );
 
 CREATE TABLE has_access (
     subscription_id VARCHAR(50) REFERENCES subscription(subscription_id),
-    id_society      VARCHAR(50) REFERENCES society(id_society),
-    PRIMARY KEY (subscription_id, id_society)
+    society_id      VARCHAR(50) REFERENCES society(society_id),
+    PRIMARY KEY (subscription_id, society_id)
 );
 
 CREATE TABLE links (
@@ -337,8 +337,8 @@ CREATE TABLE gets (
 
 CREATE TABLE regroups (
     subscription_id VARCHAR(50) REFERENCES subscription(subscription_id),
-    id_history      VARCHAR(50) REFERENCES history(id_history),
-    PRIMARY KEY (subscription_id, id_history)
+    history_id      VARCHAR(50) REFERENCES history(history_id),
+    PRIMARY KEY (subscription_id, history_id)
 );
 
 -- ============================================================
