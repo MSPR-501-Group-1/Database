@@ -28,44 +28,6 @@ INSERT INTO role (role_id, role_type, is_system) VALUES
 ('role_nutri',      'NUTRITIONIST', TRUE),
 ('role_modo',       'MODERATOR',    TRUE);
 
--- ============================================================
--- PERMISSIONS
--- ============================================================
-
-INSERT INTO permission (permission_id, permission_code, resource, action, description) VALUES
-('perm_1',  'subscription:read',   'subscription',  'READ',   'Lire ses abonnements'),
-('perm_2',  'subscription:create', 'subscription',  'CREATE', 'Créer un abonnement'),
-('perm_3',  'user:read',           'user',          'READ',   'Lire les profils'),
-('perm_4',  'user:delete',         'user',          'DELETE', 'Supprimer un utilisateur'),
-('perm_5',  'user:admin',          'user',          'ADMIN',  'Administrer les utilisateurs'),
-('perm_6',  'recipe:create',       'recipe',        'CREATE', 'Créer des recettes'),
-('perm_7',  'analytics:read',      'analytics',     'READ',   'Accéder aux analytics'),
-('perm_8',  'analytics:export',    'analytics',     'EXPORT', 'Exporter les données');
-
--- ============================================================
--- ASSOCIATION ROLE <-> PERMISSION
--- ============================================================
-
-INSERT INTO has_permission (role_id, permission_id) VALUES
-('role_admin',    'perm_1'),
-('role_admin',    'perm_2'),
-('role_admin',    'perm_3'),
-('role_admin',    'perm_4'),
-('role_admin',    'perm_5'),
-('role_admin',    'perm_6'),
-('role_admin',    'perm_7'),
-('role_admin',    'perm_8'),
-('role_premium',  'perm_1'),
-('role_premium',  'perm_6'),
-('role_premium',  'perm_7'),
-('role_premium_p','perm_1'),
-('role_premium_p','perm_6'),
-('role_premium_p','perm_7'),
-('role_premium_p','perm_8'),
-('role_freemium', 'perm_1'),
-('role_nutri',    'perm_3'),
-('role_nutri',    'perm_6'),
-('role_nutri',    'perm_7');
 
 -- ============================================================
 -- FEATURES

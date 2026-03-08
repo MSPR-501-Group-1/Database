@@ -212,14 +212,6 @@ CREATE TABLE role(
     PRIMARY KEY(role_id)
 );
 
-CREATE TABLE permission(
-    permission_id   VARCHAR(50),
-    permission_code VARCHAR(100),
-    resource        VARCHAR(50),
-    action          VARCHAR(50),
-    description     TEXT,
-    PRIMARY KEY(permission_id)
-);
 
 CREATE TABLE organization(
     organization_id VARCHAR(50),
@@ -469,14 +461,6 @@ CREATE TABLE has_feature(
     PRIMARY KEY(plan_id, feature_id),
     FOREIGN KEY(plan_id)    REFERENCES subscription_plan(plan_id),
     FOREIGN KEY(feature_id) REFERENCES feature(feature_id)
-);
-
-CREATE TABLE has_permission(
-    role_id         VARCHAR(50),
-    permission_id   VARCHAR(50),
-    PRIMARY KEY(role_id, permission_id),
-    FOREIGN KEY(role_id)        REFERENCES role(role_id),
-    FOREIGN KEY(permission_id)  REFERENCES permission(permission_id)
 );
 
 
