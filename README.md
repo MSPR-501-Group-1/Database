@@ -23,7 +23,7 @@ Ce guide explique comment installer **PostgreSQL** et **pgAdmin4**, puis créer 
    - Choisissez le répertoire d'installation (par défaut : `C:\Program Files\PostgreSQL\16`)
    - Sélectionnez les composants : cochez **PostgreSQL Server**, **pgAdmin 4**, **Stack Builder**, **Command Line Tools**
    - Choisissez le répertoire des données (par défaut)
-   - Définissez un **mot de passe** pour l'utilisateur `postgres` ⚠️ *Notez-le bien, il sera nécessaire plus tard*
+   - Définissez un **mot de passe** pour l'utilisateur `postgres` ⚠️ *Notez-le bien, il sera nécessaire plus tard* 
    - Port par défaut : **5432** (laissez tel quel)
    - Locale : laissez la valeur par défaut
 5. Terminez l'installation
