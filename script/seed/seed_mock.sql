@@ -144,10 +144,6 @@ INSERT INTO organization (organization_id, name, org_type, domain) VALUES
 ('org_2', 'MusclePark Lyon',    'GYM',     'musclepark-lyon.fr'),
 ('org_3', 'Mutuelle SantéPlus', 'MUTUAL',  'santeplus.fr');
 
-INSERT INTO org_subscription (org_sub_id, seats_total, seats_used, status, start_date, end_date, plan_id, organization_id) VALUES
-('orgsub_1', 50,  12, 'ACTIVE',   '2025-01-01', '2026-01-01', 'plan_b2b', 'org_1'),
-('orgsub_2', 20,  8,  'ACTIVE',   '2025-03-01', '2026-03-01', 'plan_b2b', 'org_2'),
-('orgsub_3', 100, 0,  'SUSPENDED','2024-06-01', '2025-06-01', 'plan_b2b', 'org_3');
 
 -- ============================================================
 -- USER PROFILES
