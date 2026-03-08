@@ -41,9 +41,7 @@ CREATE TYPE org_type_enum AS ENUM (
     'COMPANY', 'GYM', 'MUTUAL', 'NGO', 'OTHER'
 );
 
-CREATE TYPE org_sub_status_enum AS ENUM (
-    'ACTIVE', 'SUSPENDED', 'EXPIRED'
-);
+
 
 CREATE TYPE sub_event_type_enum AS ENUM (
     'CREATED', 'UPGRADED', 'DOWNGRADED', 'RENEWED', 'PAUSED',
@@ -284,19 +282,7 @@ CREATE TABLE subscription_plan(
     FOREIGN KEY(role_id) REFERENCES role(role_id)
 );
 
-CREATE TABLE org_subscription(
-    org_sub_id      VARCHAR(50),
-    seats_total     INT NOT NULL,                 -- VARCHAR → INT
-    seats_used      INT DEFAULT 0,
-    status          org_sub_status_enum NOT NULL, -- ENUM
-    start_date      DATE NOT NULL,
-    end_date        DATE,
-    plan_id         VARCHAR(50) NOT NULL,
-    organization_id VARCHAR(50) NOT NULL,
-    PRIMARY KEY(org_sub_id),
-    FOREIGN KEY(plan_id)         REFERENCES subscription_plan(plan_id),
-    FOREIGN KEY(organization_id) REFERENCES organization(organization_id)
-);
+
 
 CREATE TABLE subscription(
     subscription_id     VARCHAR(50),
@@ -493,13 +479,7 @@ CREATE TABLE has_permission(
     FOREIGN KEY(permission_id)  REFERENCES permission(permission_id)
 );
 
-CREATE TABLE has_access(
-    subscription_id VARCHAR(50),
-    organization_id VARCHAR(50),
-    PRIMARY KEY(subscription_id, organization_id),
-    FOREIGN KEY(subscription_id) REFERENCES subscription(subscription_id),
-    FOREIGN KEY(organization_id) REFERENCES organization(organization_id)
-);
+
 
 CREATE TABLE Parts_of(
     user_id         VARCHAR(50),
