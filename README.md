@@ -1,3 +1,15 @@
+# Organisation du dossier Database
+
+Dans Looping -> On a les itérations des loopings versionées
+
+Dans scripts -> On a les itérations des scripts (init / seed) versionnées
+
+A la racine -> On a le initdb et seed qui sont utilisés par le docker-compose. Si il faut les update, pensez à garder les même noms précisement et à versionner vos fichiers.
+
+---
+---
+---
+
 # 🐘 Installation PostgreSQL & pgAdmin4 — Base de données MSPR
 
 Ce guide explique comment installer **PostgreSQL** et **pgAdmin4**, puis créer et initialiser la base de données **MSPR** à partir du script SQL fourni.

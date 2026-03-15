@@ -41,7 +41,9 @@ CREATE TYPE diet_type_enum AS ENUM (
     'NONE', 'VEGETARIAN', 'VEGAN', 'PESCATARIAN', 'KETO', 'PALEO', 'OTHER'
 );
 
-
+CREATE TYPE body_part_enum AS ENUM (
+    'ARMS', 'LEGS', 'BACK', 'CHEST', 'SHOULDERS', 'CORE', 'FULL_BODY'
+);
 
 -- TABLES ------------------------------------------------
 
@@ -57,8 +59,8 @@ CREATE TABLE ingredients(
    name VARCHAR(50),
    calories_g DECIMAL(4,1),
    fat_g DECIMAL(4,1),
-   nutriscore nutriscore_enum ENUM,
-   category category_enum ENUM,
+   nutriscore nutriscore_enum,
+   category category_enum,
    fiber_g DECIMAL(4,1),
    sugar_g DECIMAL(4,1),
    sodium_mg DECIMAL(4,1),
@@ -73,19 +75,19 @@ CREATE TABLE recipe(
    title VARCHAR(50),
    instructions VARCHAR(500),
    prep_time_min SMALLINT,
-   difficulty recipe_difficulty_enum ENUM,
+   difficulty recipe_difficulty_enum,
    PRIMARY KEY(recipe_id)
 );
 
 CREATE TABLE exercise(
    exercise_id VARCHAR(50),
    name VARCHAR(50),
-   body_part_target ENUM,
+   body_part_target body_part_enum,
    video_url VARCHAR(50),
    description VARCHAR(50),
-   difficulty_level exercise_difficulty_enum ENUM,
+   difficulty_level exercise_difficulty_enum,
    equipment_required VARCHAR(50),
-   category exercise_category_enum ENUM,
+   category exercise_category_enum,
    PRIMARY KEY(exercise_id)
 );
 
@@ -93,14 +95,14 @@ CREATE TABLE connected_device(
    device_id VARCHAR(50),
    device_name VARCHAR(50),
    device_type VARCHAR(50),
-   last_synch DATE,
-   is_active LOGICAL,
+   last_synch TIMESTAMP,
+   is_active BOOLEAN,
    PRIMARY KEY(device_id)
 );
 
 CREATE TABLE user_metrics(
    metric_id VARCHAR(50),
-   recorded_date DATETIME,
+   recorded_date TIMESTAMP,
    weight_kg DECIMAL(5,2),
    body_fat_pourcentage DECIMAL(4,1),
    steps INT,
@@ -118,19 +120,19 @@ CREATE TABLE data_source(
    format VARCHAR(50),
    source_url VARCHAR(50),
    expected_records VARCHAR(50),
-   last_updates DATETIME,
-   is_active LOGICAL,
+   last_updates TIMESTAMP,
+   is_active BOOLEAN,
    PRIMARY KEY(source_id)
 );
 
 CREATE TABLE etl_execution(
    execution_id VARCHAR(50),
-   started_at DATETIME,
-   ended_at DATETIME,
-   status LOGICAL,
-   records_extracted LOGICAL,
-   records_loaded LOGICAL,
-   records_rejected LOGICAL,
+   started_at TIMESTAMP,
+   ended_at TIMESTAMP,
+   status BOOLEAN,
+   records_extracted BOOLEAN,
+   records_loaded BOOLEAN,
+   records_rejected BOOLEAN,
    error_message VARCHAR(50),
    triggered_by VARCHAR(50),
    source_id VARCHAR(50) NOT NULL,
@@ -145,8 +147,8 @@ CREATE TABLE data_quality_check_(
    check_rule VARCHAR(50),
    records_checked VARCHAR(50),
    records_failed VARCHAR(50),
-   checked_at DATETIME,
-   status LOGICAL,
+   checked_at TIMESTAMP,
+   status BOOLEAN,
    execution_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(check_id),
    FOREIGN KEY(execution_id) REFERENCES etl_execution(execution_id)
@@ -159,9 +161,9 @@ CREATE TABLE data_anomaly(
    field_name VARCHAR(50),
    record_identifier VARCHAR(50),
    original_value VARCHAR(50),
-   detected_at DATETIME,
+   detected_at TIMESTAMP,
    severity VARCHAR(50),
-   is_resolved LOGICAL,
+   is_resolved BOOLEAN,
    resolution_action VARCHAR(50),
    check_id VARCHAR(50),
    execution_id VARCHAR(50) NOT NULL,
@@ -173,22 +175,22 @@ CREATE TABLE data_anomaly(
 CREATE TABLE feature(
    feature_id VARCHAR(50),
    name VARCHAR(50),
-   description VARCHAR(50),
+   description VARCHAR(200),
    category VARCHAR(50),
    PRIMARY KEY(feature_id)
 );
 
 CREATE TABLE role(
    role_id VARCHAR(50),
-   role_type role_type_enum ENUM,
-   is_system LOGICAL,
+   role_type role_type_enum,
+   is_system BOOLEAN,
    PRIMARY KEY(role_id)
 );
 
 CREATE TABLE organization(
    organization_id VARCHAR(50),
    name VARCHAR(50),
-   org_type org_type_enum ENUM,
+   org_type org_type_enum,
    domain VARCHAR(50),
    PRIMARY KEY(organization_id)
 );
@@ -198,9 +200,9 @@ CREATE TABLE user_profile(
    height_cm DECIMAL(3,2),
    current_weight_kg DECIMAL(5,2),
    activity_level_ref VARCHAR(50),
-   allergies allergies_enum ENUM,
-   diet_type diet_type_enum ENUM,
-   updated_at DATETIME,
+   allergies allergies_enum,
+   diet_type diet_type_enum,
+   updated_at TIMESTAMP,
    goal_id VARCHAR(50),
    PRIMARY KEY(user_id),
    FOREIGN KEY(goal_id) REFERENCES health_goal(goal_id)
@@ -212,9 +214,9 @@ CREATE TABLE subscription_plan(
    description VARCHAR(50),
    billing_cycle VARCHAR(50),
    price_ht DECIMAL(15,2),
-   is_public LOGICAL,
-   created_at DATE,
-   updated_at DATE,
+   is_public BOOLEAN,
+   created_at TIMESTAMP,
+   updated_at TIMESTAMP,
    role_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(plan_id),
    FOREIGN KEY(role_id) REFERENCES role(role_id)
@@ -223,14 +225,14 @@ CREATE TABLE subscription_plan(
 CREATE TABLE user_(
    user_id VARCHAR(50),
    email VARCHAR(50),
-   password_hash VARCHAR(20),
+   password_hash VARCHAR(200),
    first_name VARCHAR(50),
    last_name VARCHAR(50),
-   birth_date DATE,
+   birth_date TIMESTAMP,
    gender_code INT,
-   created_at DATE,
-   is_active LOGICAL,
-   role_code role_type_enum ENUM,
+   created_at TIMESTAMP,
+   is_active BOOLEAN,
+   role_code role_type_enum,
    role_id VARCHAR(50) NOT NULL,
    user_id_1 VARCHAR(50) NOT NULL,
    PRIMARY KEY(user_id),
@@ -241,13 +243,13 @@ CREATE TABLE user_(
 
 CREATE TABLE subscription(
    subscription_id VARCHAR(50),
-   start_date DATE,
-   end_date DATE,
-   status LOGICAL,
-   cancelled_at DATE,
+   start_date TIMESTAMP,
+   end_date TIMESTAMP,
+   status BOOLEAN,
+   cancelled_at TIMESTAMP,
    cancellation_reason VARCHAR(50),
-   created_at DATE,
-   updated_at DATE,
+   created_at TIMESTAMP,
+   updated_at TIMESTAMP,
    user_id VARCHAR(50) NOT NULL,
    plan_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(subscription_id),
@@ -257,10 +259,10 @@ CREATE TABLE subscription(
 
 CREATE TABLE payment_transaction(
    transaction_id VARCHAR(50),
-   processed_at DATETIME,
-   amount_ht CURRENCY,
-   status LOGICAL,
-   created_at DATE,
+   processed_at TIMESTAMP,
+   amount_ht NUMERIC(15,2),
+   status BOOLEAN,
+   created_at TIMESTAMP,
    subscription_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(transaction_id),
    FOREIGN KEY(subscription_id) REFERENCES subscription(subscription_id)
@@ -268,9 +270,9 @@ CREATE TABLE payment_transaction(
 
 CREATE TABLE meal(
    meal_id VARCHAR(50),
-   consumed_at DATE,
+   consumed_at TIMESTAMP,
    quantity_grams INT,
-   diet_type diet_type_enum ENUM,
+   diet_type diet_type_enum,
    calories_consumed INT,
    ingredients VARCHAR(50),
    user_id VARCHAR(50) NOT NULL,
@@ -280,7 +282,7 @@ CREATE TABLE meal(
 
 CREATE TABLE workout_session(
    session_id VARCHAR(50),
-   start_time DATE,
+   start_time TIMESTAMP,
    duration_time SMALLINT,
    calories_burned SMALLINT,
    notes VARCHAR(50),
@@ -304,7 +306,7 @@ CREATE TABLE biometric_measure(
    measure_id VARCHAR(50),
    type VARCHAR(50),
    value_ INT,
-   measured_at DATETIME,
+   measured_at TIMESTAMP,
    user_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(measure_id),
    FOREIGN KEY(user_id) REFERENCES user_(user_id)
@@ -312,12 +314,12 @@ CREATE TABLE biometric_measure(
 
 CREATE TABLE ai_recommendation(
    recommendation_id VARCHAR(50),
-   generated_at DATETIME,
+   generated_at TIMESTAMP,
    category VARCHAR(50),
    title VARCHAR(50),
    content_text VARCHAR(200),
    confidence_score DECIMAL(15,2),
-   is_viewed LOGICAL,
+   is_viewed BOOLEAN,
    feedback_rating DECIMAL(15,2),
    user_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(recommendation_id),
@@ -331,9 +333,9 @@ CREATE TABLE diet_recommendation(
    protein_g DECIMAL(4,1),
    carbs_g DECIMAL(4,1),
    fat_g DECIMAL(4,1),
-   diet_type diet_type_enum ENUM,
-   generated_at DATETIME,
-   is_followed LOGICAL,
+   diet_type diet_type_enum,
+   generated_at TIMESTAMP,
+   is_followed BOOLEAN,
    user_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(recommendation_id),
    FOREIGN KEY(user_id) REFERENCES user_(user_id)
@@ -344,7 +346,7 @@ CREATE TABLE subscription_history(
    status_event VARCHAR(50),
    previous_role VARCHAR(50),
    new_role VARCHAR(50),
-   occurred_at_ DATE,
+   occurred_at_ TIMESTAMP,
    plan_id VARCHAR(50) NOT NULL,
    plan_id_1 VARCHAR(50) NOT NULL,
    user_id VARCHAR(50) NOT NULL,
