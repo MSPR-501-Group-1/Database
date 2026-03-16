@@ -246,18 +246,6 @@ INSERT INTO has_feature (plan_id, feature_id) VALUES
   ('PLAN_06', 'FT_010');
 
 -- ============================================================
--- user_
--- ============================================================
-INSERT INTO user_ (user_id, email, password_hash, first_name, last_name, birth_date, gender_code, created_at, is_active, role_code, role_id) VALUES
-  ('USR_001', 'alice.martin@email.com',   crypt('Password1!', gen_salt('bf')), 'Alice',   'Martin',   '1990-04-15', 1, '2024-03-01', TRUE,  'PREMIUM',      'ROLE_02'),
-  ('USR_002', 'bob.dupont@email.com',     crypt('Password2!', gen_salt('bf')), 'Bob',     'Dupont',   '1985-08-22', 1, '2024-04-10', TRUE,  'FREEMIUM',     'ROLE_01'),
-  ('USR_003', 'claire.leroy@email.com',   crypt('Password3!', gen_salt('bf')), 'Claire',  'Leroy',    '1995-12-05', 2, '2024-05-20', TRUE,  'PREMIUM_PLUS', 'ROLE_03'),
-  ('USR_004', 'david.petit@email.com',    crypt('Password4!', gen_salt('bf')), 'David',   'Petit',    '1992-06-30', 1, '2024-06-15', TRUE,  'B2B',          'ROLE_04'),
-  ('USR_005', 'emma.blanc@email.com',     crypt('Password5!', gen_salt('bf')), 'Emma',    'Blanc',    '1998-02-14', 2, '2024-07-01', TRUE,  'PREMIUM',      'ROLE_02'),
-  ('USR_006', 'francois.noir@email.com',  crypt('Password6!', gen_salt('bf')), 'François','Noir',     '1988-09-17', 1, '2024-08-05', FALSE, 'FREEMIUM',     'ROLE_01'),
-  ('USR_007', 'admin@healthapp.com',      crypt('AdminPass!', gen_salt('bf')), 'Admin',   'System',   '1980-01-01', 1, '2023-01-01', TRUE,  'ADMIN',        'ROLE_05');
-
--- ============================================================
 -- user_profile
 -- ============================================================
 INSERT INTO user_profile (user_id, height_cm, current_weight_kg, activity_level_ref, allergies, diet_type, updated_at, goal_id) VALUES
@@ -268,6 +256,18 @@ INSERT INTO user_profile (user_id, height_cm, current_weight_kg, activity_level_
   ('USR_005', 1.68, 71.00, 'ACTIVE',       'NUTS',   'KETO',       '2025-01-10 12:00:00', 'GOAL_005'),
   ('USR_006', 1.82, 85.00, 'MODERATE',     'NONE',   'NONE',       '2025-01-09 08:00:00', 'GOAL_004'),
   ('USR_007', 1.60, 58.00, 'ACTIVE',       'SOY',    'PESCATARIAN','2025-01-08 09:00:00', 'GOAL_002');
+
+-- ============================================================
+-- user_
+-- ============================================================
+INSERT INTO user_ (user_id, email, password_hash, first_name, last_name, birth_date, gender_code, created_at, is_active, role_code, role_id) VALUES
+  ('USR_001', 'alice.martin@email.com',   crypt('Password1!', gen_salt('bf')), 'Alice',   'Martin',   '1990-04-15', 1, '2024-03-01', TRUE,  'PREMIUM',      'ROLE_02'),
+  ('USR_002', 'bob.dupont@email.com',     crypt('Password2!', gen_salt('bf')), 'Bob',     'Dupont',   '1985-08-22', 1, '2024-04-10', TRUE,  'FREEMIUM',     'ROLE_01'),
+  ('USR_003', 'claire.leroy@email.com',   crypt('Password3!', gen_salt('bf')), 'Claire',  'Leroy',    '1995-12-05', 2, '2024-05-20', TRUE,  'PREMIUM_PLUS', 'ROLE_03'),
+  ('USR_004', 'david.petit@email.com',    crypt('Password4!', gen_salt('bf')), 'David',   'Petit',    '1992-06-30', 1, '2024-06-15', TRUE,  'B2B',          'ROLE_04'),
+  ('USR_005', 'emma.blanc@email.com',     crypt('Password5!', gen_salt('bf')), 'Emma',    'Blanc',    '1998-02-14', 2, '2024-07-01', TRUE,  'PREMIUM',      'ROLE_02'),
+  ('USR_006', 'francois.noir@email.com',  crypt('Password6!', gen_salt('bf')), 'François','Noir',     '1988-09-17', 1, '2024-08-05', FALSE, 'FREEMIUM',     'ROLE_01'),
+  ('USR_007', 'admin@healthapp.com',      crypt('AdminPass!', gen_salt('bf')), 'Admin',   'System',   '1980-01-01', 1, '2023-01-01', TRUE,  'ADMIN',        'ROLE_05');
 
 -- ============================================================
 -- subscription
