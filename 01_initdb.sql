@@ -209,8 +209,8 @@ CREATE TABLE user_(
 
 CREATE TABLE user_profile(
    user_id VARCHAR(50),
-   height_cm DECIMAL(3,2),
-   current_weight_kg DECIMAL(5,2),
+   height_cm DECIMAL(10,2),
+   current_weight_kg DECIMAL(10,2),
    activity_level_ref VARCHAR(50),
    allergies allergies_enum,
    diet_type diet_type_enum,
@@ -224,10 +224,10 @@ CREATE TABLE user_profile(
 CREATE TABLE user_metrics(
    metric_id VARCHAR(50) DEFAULT gen_random_uuid(),
    recorded_date TIMESTAMP,
-   weight_kg DECIMAL(5,2),
-   body_fat_pourcentage DECIMAL(4,1),
+   weight_kg DECIMAL(10,2),
+   body_fat_pourcentage DECIMAL(10,2),
    steps INT,
-   calories_burned DECIMAL(5,1),
+   calories_burned DECIMAL(10,2),
    heart_rate_avg INT,
    heart_rate_max INT,
    sleep_hours INT,
