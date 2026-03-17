@@ -170,12 +170,11 @@ INSERT INTO feature (feature_id, name, description, category) VALUES
 -- role
 -- ============================================================
 INSERT INTO role (role_id, role_type, is_system) VALUES
-  ('ROLE_01', 'FREEMIUM',     TRUE),
-  ('ROLE_02', 'PREMIUM',      TRUE),
-  ('ROLE_03', 'PREMIUM_PLUS', TRUE),
-  ('ROLE_04', 'B2B',          TRUE),
+  ('ROLE_01', 'FREEMIUM',     FALSE),
+  ('ROLE_02', 'PREMIUM',      FALSE),
+  ('ROLE_03', 'PREMIUM_PLUS', FALSE),
+  ('ROLE_04', 'B2B',          FALSE),
   ('ROLE_05', 'ADMIN',        TRUE);
-
 -- ============================================================
 -- organization
 -- ============================================================
