@@ -47,7 +47,7 @@ CREATE TABLE health_goal(
 );
 
 CREATE TABLE ingredient(
-   ingredients_id VARCHAR(255) DEFAULT gen_random_uuid(),
+   ingredient_id VARCHAR(255) DEFAULT gen_random_uuid(),
    name VARCHAR(255),
    category ingredient_category_enum,
    nutriscore nutriscore_enum,
@@ -60,7 +60,7 @@ CREATE TABLE ingredient(
    cholesterol_mg DECIMAL(5,2),
    protein_g DECIMAL(5,2),
    carbs_g DECIMAL(5,2),
-   PRIMARY KEY(ingredients_id)
+   PRIMARY KEY(ingredient_id)
 );
 
 CREATE TABLE recipe(
