@@ -234,7 +234,35 @@ INSERT INTO login_history (last_login_id, user_id, last_login) VALUES
   ('LOG_003', 'USR_003', '2025-01-14 10:20:00'),
   ('LOG_004', 'USR_004', '2025-01-14 11:00:00'),
   ('LOG_005', 'USR_005', '2025-01-13 18:35:00'),
-  ('LOG_006', 'USR_007', '2025-01-14 06:45:00');
+  ('LOG_006', 'USR_007', '2025-01-14 06:45:00'),
+  ('LOG_007', 'USR_001', '2026-03-21 08:05:00'),
+  ('LOG_008', 'USR_002', '2026-03-21 08:40:00'),
+  ('LOG_009', 'USR_003', '2026-03-21 09:10:00'),
+  ('LOG_010', 'USR_004', '2026-03-20 07:55:00'),
+  ('LOG_011', 'USR_005', '2026-03-20 08:20:00'),
+  ('LOG_012', 'USR_006', '2026-03-20 21:40:00'),
+  ('LOG_013', 'USR_007', '2026-03-20 06:35:00'),
+  ('LOG_014', 'USR_001', '2026-03-19 07:50:00'),
+  ('LOG_015', 'USR_002', '2026-03-19 19:20:00'),
+  ('LOG_016', 'USR_003', '2026-03-18 08:15:00'),
+  ('LOG_017', 'USR_004', '2026-03-18 12:55:00'),
+  ('LOG_018', 'USR_005', '2026-03-18 20:40:00'),
+  ('LOG_019', 'USR_006', '2026-03-17 22:10:00'),
+  ('LOG_020', 'USR_007', '2026-03-17 07:05:00'),
+  ('LOG_021', 'USR_001', '2026-03-16 08:10:00'),
+  ('LOG_022', 'USR_002', '2026-03-15 08:45:00'),
+  ('LOG_023', 'USR_003', '2026-03-15 13:05:00'),
+  ('LOG_024', 'USR_004', '2026-03-14 09:30:00'),
+  ('LOG_025', 'USR_005', '2026-03-13 18:40:00'),
+  ('LOG_026', 'USR_006', '2026-03-12 20:10:00'),
+  ('LOG_027', 'USR_007', '2026-03-11 19:50:00'),
+  ('LOG_028', 'USR_001', '2026-02-28 08:05:00'),
+  ('LOG_029', 'USR_002', '2026-02-21 08:25:00'),
+  ('LOG_030', 'USR_003', '2026-02-14 18:55:00'),
+  ('LOG_031', 'USR_004', '2026-02-10 07:10:00'),
+  ('LOG_032', 'USR_005', '2026-01-20 18:05:00'),
+  ('LOG_033', 'USR_006', '2026-01-05 18:40:00'),
+  ('LOG_034', 'USR_007', '2025-12-15 08:30:00');
 
 -- ============================================================
 -- meal
@@ -432,4 +460,147 @@ INSERT INTO workout_session_exercise (session_id, exercise_id, sets) VALUES
   ('WS_005', 'EXC_009', 4),
   ('WS_006', 'EXC_007', 3),
   ('WS_007', 'EXC_003', 4),
-  ('WS_007', 'EXC_002', 4);
+  ('WS_007', 'EXC_002', 4),
+  ('WS_008', 'EXC_004', 1),
+  ('WS_009', 'EXC_008', 4),
+  ('WS_010', 'EXC_001', 4),
+  ('WS_010', 'EXC_002', 4),
+  ('WS_011', 'EXC_004', 1),
+  ('WS_012', 'EXC_007', 3),
+  ('WS_013', 'EXC_005', 3),
+  ('WS_014', 'EXC_004', 1),
+  ('WS_015', 'EXC_005', 3),
+  ('WS_016', 'EXC_008', 5),
+  ('WS_017', 'EXC_004', 1),
+  ('WS_018', 'EXC_003', 4),
+  ('WS_019', 'EXC_007', 3),
+  ('WS_020', 'EXC_005', 2),
+  ('WS_021', 'EXC_004', 1),
+  ('WS_022', 'EXC_009', 4),
+  ('WS_023', 'EXC_004', 1),
+  ('WS_024', 'EXC_010', 6),
+  ('WS_025', 'EXC_001', 4),
+  ('WS_026', 'EXC_007', 3),
+  ('WS_027', 'EXC_002', 4),
+  ('WS_028', 'EXC_008', 5),
+  ('WS_029', 'EXC_004', 1),
+  ('WS_030', 'EXC_005', 3),
+  ('WS_031', 'EXC_003', 4),
+  ('WS_032', 'EXC_001', 4),
+  ('WS_033', 'EXC_008', 4),
+  ('WS_034', 'EXC_007', 2),
+  ('WS_035', 'EXC_004', 1),
+  ('WS_036', 'EXC_010', 6),
+  ('WS_037', 'EXC_004', 1),
+  ('WS_038', 'EXC_002', 4),
+  ('WS_039', 'EXC_009', 4),
+  ('WS_040', 'EXC_001', 4),
+  ('WS_041', 'EXC_004', 1),
+  ('WS_042', 'EXC_008', 5),
+  ('WS_043', 'EXC_007', 3),
+  ('WS_044', 'EXC_002', 4),
+  ('WS_045', 'EXC_006', 4),
+  ('WS_046', 'EXC_004', 1),
+  ('WS_047', 'EXC_003', 4),
+  ('WS_048', 'EXC_009', 4),
+  ('WS_049', 'EXC_007', 3),
+  ('WS_050', 'EXC_008', 4);
+
+-- ============================================================
+-- additional KPI variability seed (mixed activity profiles)
+-- ============================================================
+
+INSERT INTO user_ (
+  user_id,
+  email,
+  password_hash,
+  first_name,
+  last_name,
+  birth_date,
+  gender_code,
+  height_cm,
+  current_weight_kg,
+  allergies,
+  diet_type,
+  is_active,
+  role_id,
+  created_at,
+  updated_at
+) VALUES
+  ('USR_008', 'hugo.bernard@email.com', crypt('Password8!', gen_salt('bf')), 'Hugo', 'Bernard', '1991-03-22', 1, 1.78, 82.30, 'NONE', 'NONE', TRUE, 'ROLE_01', '2024-02-05', '2026-03-22 08:00:00'),
+  ('USR_009', 'ines.garnier@email.com', crypt('Password9!', gen_salt('bf')), 'Ines', 'Garnier', '1994-11-09', 2, 1.66, 59.20, 'NONE', 'VEGETARIAN', TRUE, 'ROLE_02', '2024-03-18', '2026-03-22 08:00:00'),
+  ('USR_010', 'julien.roche@email.com', crypt('Password10!', gen_salt('bf')), 'Julien', 'Roche', '1987-07-12', 1, 1.84, 88.70, 'MILK', 'NONE', TRUE, 'ROLE_03', '2024-05-01', '2026-03-22 08:00:00'),
+  ('USR_011', 'lea.faure@email.com', crypt('Password11!', gen_salt('bf')), 'Lea', 'Faure', '1999-01-31', 2, 1.72, 64.40, 'NUTS', 'PESCATARIAN', TRUE, 'ROLE_01', '2024-06-10', '2026-03-22 08:00:00'),
+  ('USR_012', 'marc.rey@email.com', crypt('Password12!', gen_salt('bf')), 'Marc', 'Rey', '1983-09-03', 1, 1.75, 91.10, 'NONE', 'KETO', FALSE, 'ROLE_04', '2024-01-25', '2026-03-22 08:00:00'),
+  ('USR_013', 'nina.laurent@email.com', crypt('Password13!', gen_salt('bf')), 'Nina', 'Laurent', '1993-05-11', 2, 1.69, 66.00, 'NONE', 'NONE', TRUE, 'ROLE_01', '2024-02-14', '2026-03-22 08:00:00'),
+  ('USR_014', 'omar.morel@email.com', crypt('Password14!', gen_salt('bf')), 'Omar', 'Morel', '1986-10-27', 1, 1.80, 79.30, 'NONE', 'NONE', TRUE, 'ROLE_02', '2024-03-03', '2026-03-22 08:00:00');
+
+INSERT INTO user_health_goal (user_id, goal_id) VALUES
+  ('USR_008', 'GOAL_003'),
+  ('USR_009', 'GOAL_005'),
+  ('USR_010', 'GOAL_002'),
+  ('USR_011', 'GOAL_001'),
+  ('USR_012', 'GOAL_004'),
+  ('USR_013', 'GOAL_005'),
+  ('USR_014', 'GOAL_003');
+
+INSERT INTO login_history (last_login_id, user_id, last_login) VALUES
+  -- Active in current 7d and previous windows
+  ('LOG_035', 'USR_008', '2026-03-21 07:40:00'),
+  ('LOG_036', 'USR_008', '2026-03-18 19:35:00'),
+  ('LOG_037', 'USR_008', '2026-03-09 08:20:00'),
+  ('LOG_038', 'USR_008', '2026-02-25 21:10:00'),
+
+  -- Active in 30d/90d but not in current 7d
+  ('LOG_039', 'USR_009', '2026-03-13 10:05:00'),
+  ('LOG_040', 'USR_009', '2026-03-02 18:15:00'),
+  ('LOG_041', 'USR_009', '2026-02-20 08:45:00'),
+
+  -- Active in previous windows only, absent in current 30d
+  ('LOG_042', 'USR_010', '2026-02-18 07:55:00'),
+  ('LOG_043', 'USR_010', '2026-01-28 20:30:00'),
+
+  -- Long-tail user: contributes to churn baseline
+  ('LOG_044', 'USR_011', '2025-12-10 09:10:00'),
+
+  -- Inactive recent but seen historically
+  ('LOG_045', 'USR_012', '2025-11-05 11:25:00'),
+
+  -- Active login without workout in current 30d window (reduces current engagement)
+  ('LOG_046', 'USR_011', '2026-03-10 08:55:00'),
+
+  -- Active login without workout in previous 30d window (reduces compared engagement)
+  ('LOG_047', 'USR_012', '2026-02-10 20:20:00'),
+
+  -- Active in current 7d without workout (reduces 7d engagement from 100)
+  ('LOG_048', 'USR_011', '2026-03-22 09:40:00'),
+
+  -- Seen before 90d and active in previous 90d only (creates non-zero current 90d churn)
+  ('LOG_049', 'USR_014', '2025-11-20 17:25:00');
+
+INSERT INTO workout_session (session_id, start_at, end_at, calories_burned, notes, user_id) VALUES
+  -- Current 7d workouts
+  ('WS_101', '2026-03-21 07:00:00', '2026-03-21 07:55:00', 390, 'Progressive run', 'USR_008'),
+  ('WS_102', '2026-03-20 18:20:00', '2026-03-20 19:05:00', 340, 'Lower body session', 'USR_009'),
+  ('WS_103', '2026-03-18 06:40:00', '2026-03-18 07:30:00', 370, 'Intervals', 'USR_008'),
+
+  -- Previous 7d workouts (used for trend comparison)
+  ('WS_104', '2026-03-12 19:00:00', '2026-03-12 19:35:00', 260, 'Recovery mobility', 'USR_010'),
+  ('WS_105', '2026-03-11 07:10:00', '2026-03-11 07:50:00', 300, 'Easy cardio', 'USR_009'),
+
+  -- 30d/90d historical workouts
+  ('WS_106', '2026-02-24 18:10:00', '2026-02-24 19:00:00', 360, 'Strength', 'USR_010'),
+  ('WS_107', '2026-02-19 06:50:00', '2026-02-19 07:30:00', 280, 'Tempo', 'USR_009'),
+  ('WS_108', '2026-01-30 17:30:00', '2026-01-30 18:15:00', 320, 'Circuit', 'USR_011');
+
+INSERT INTO workout_session_exercise (session_id, exercise_id, sets) VALUES
+  ('WS_101', 'EXC_004', 1),
+  ('WS_101', 'EXC_010', 5),
+  ('WS_102', 'EXC_002', 4),
+  ('WS_102', 'EXC_005', 3),
+  ('WS_103', 'EXC_008', 4),
+  ('WS_104', 'EXC_007', 3),
+  ('WS_105', 'EXC_004', 1),
+  ('WS_106', 'EXC_009', 4),
+  ('WS_107', 'EXC_001', 4),
+  ('WS_108', 'EXC_003', 4);
