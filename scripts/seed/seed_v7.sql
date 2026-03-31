@@ -83,6 +83,16 @@ INSERT INTO exercise (
   ('EXC_010', 'Jump Rope',   'High-intensity cardiovascular drill',        'FULL_BODY', 'https://videos.example.com/jumprope',   'BEGINNER',     'Jump rope',     'CARDIO');
 
 -- ============================================================
+-- data_source
+-- ============================================================
+INSERT INTO data_source (source_id, source_name, source_type, format, source_url, expected_records, last_updates, is_active) VALUES
+  ('SRC_001', 'OpenFoodFacts',    'Public API',  'JSON', 'https://world.openfoodfacts.org/api', '50000', '2025-01-10 06:00:00', TRUE),
+  ('SRC_002', 'WHO Nutrition DB', 'CSV Export',  'CSV',  'https://www.who.int/data/nutrition',  '10000', '2025-01-01 00:00:00', TRUE),
+  ('SRC_003', 'ExerciseDB',       'REST API',    'JSON', 'https://exercisedb.p.rapidapi.com',   '1300',  '2025-01-05 06:00:00', TRUE),
+  ('SRC_004', 'User Wearables',   'Device Sync', 'JSON', 'https://internal.sync.example.com',   '99999', '2025-01-14 02:00:00', TRUE),
+  ('SRC_005', 'ANSES CIQUAL',     'CSV Export',  'CSV',  'https://ciqual.anses.fr',              '3000',  '2024-12-01 00:00:00', FALSE);
+
+-- ============================================================
 -- etl_execution
 -- ============================================================
 INSERT INTO etl_execution (
@@ -93,13 +103,15 @@ INSERT INTO etl_execution (
   records_extracted,
   records_loaded,
   records_rejected,
-  error_message
+  error_message,
+  triggered_by,
+  source_id
 ) VALUES
-  ('ETL_001', '2025-01-10 06:00:00', '2025-01-10 06:15:00', TRUE,  49988, 49988,    0, NULL),
-  ('ETL_002', '2025-01-10 06:15:00', '2025-01-10 06:20:00', TRUE,   1300,  1300,    0, NULL),
-  ('ETL_003', '2025-01-14 02:00:00', '2025-01-14 02:45:00', TRUE,  99999, 98500,  750, NULL),
-  ('ETL_004', '2025-01-05 06:00:00', '2025-01-05 06:05:00', FALSE,  1300,     0, 1300, 'Connection timeout'),
-  ('ETL_005', '2025-01-01 00:00:00', '2025-01-01 00:30:00', TRUE,  10000,  9950,    0, NULL);
+  ('ETL_001', '2025-01-10 06:00:00', '2025-01-10 06:15:00', TRUE,  TRUE,  TRUE,  FALSE, NULL,                 'scheduler', 'SRC_001'),
+  ('ETL_002', '2025-01-10 06:15:00', '2025-01-10 06:20:00', TRUE,  TRUE,  TRUE,  FALSE, NULL,                 'scheduler', 'SRC_003'),
+  ('ETL_003', '2025-01-14 02:00:00', '2025-01-14 02:45:00', TRUE,  TRUE,  TRUE,  TRUE,  NULL,                 'scheduler', 'SRC_004'),
+  ('ETL_004', '2025-01-05 06:00:00', '2025-01-05 06:05:00', FALSE, TRUE,  FALSE, TRUE,  'Connection timeout', 'manual',    'SRC_003'),
+  ('ETL_005', '2025-01-01 00:00:00', '2025-01-01 00:30:00', TRUE,  TRUE,  TRUE,  FALSE, NULL,                 'scheduler', 'SRC_002');
 
 -- ============================================================
 -- data_quality_check_
@@ -115,11 +127,11 @@ INSERT INTO data_quality_check_ (
   status,
   execution_id
 ) VALUES
-  ('CHK_001', 'ingredient',   'NULL_CHECK',      'calories_g IS NOT NULL',           50000, 12, '2025-01-10 06:16:00', TRUE, 'ETL_001'),
-  ('CHK_002', 'ingredient',   'RANGE_CHECK',     'calories_g BETWEEN 0 AND 900',     50000,  3, '2025-01-10 06:16:30', TRUE, 'ETL_001'),
-  ('CHK_003', 'exercise',     'DUPLICATE_CHECK', 'DISTINCT exercise_id',              1300,  0, '2025-01-10 06:21:00', TRUE, 'ETL_002'),
-  ('CHK_004', 'user_metrics', 'RANGE_CHECK',     'heart_rate_avg BETWEEN 30 AND 220', 99999, 7, '2025-01-14 02:46:00', TRUE, 'ETL_003'),
-  ('CHK_005', 'ingredient',   'NULL_CHECK',      'name IS NOT NULL',                   3000,  0, '2025-01-01 00:31:00', TRUE, 'ETL_005');
+  ('CHK_001', 'ingredient',   'NULL_CHECK',      'calories_g IS NOT NULL',           '50000', '12', '2025-01-10 06:16:00', TRUE, 'ETL_001'),
+  ('CHK_002', 'ingredient',   'RANGE_CHECK',     'calories_g BETWEEN 0 AND 900',     '50000', '3',  '2025-01-10 06:16:30', TRUE, 'ETL_001'),
+  ('CHK_003', 'exercise',     'DUPLICATE_CHECK', 'DISTINCT exercise_id',              '1300', '0',  '2025-01-10 06:21:00', TRUE, 'ETL_002'),
+  ('CHK_004', 'user_metrics', 'RANGE_CHECK',     'heart_rate_avg BETWEEN 30 AND 220', '99999', '7', '2025-01-14 02:46:00', TRUE, 'ETL_003'),
+  ('CHK_005', 'ingredient',   'NULL_CHECK',      'name IS NOT NULL',                   '3000', '0',  '2025-01-01 00:31:00', TRUE, 'ETL_005');
 
 -- ============================================================
 -- data_anomaly
