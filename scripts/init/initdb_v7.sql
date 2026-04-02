@@ -82,31 +82,17 @@ CREATE TABLE exercise(
    PRIMARY KEY(exercise_id)
 );
 
-CREATE TABLE data_source(
-   source_id VARCHAR(255) DEFAULT gen_random_uuid(),
-   source_name VARCHAR(50),
-   source_type VARCHAR(50),
-   format VARCHAR(50),
-   source_url VARCHAR(50),
-   expected_records VARCHAR(50),
-   last_updates TIMESTAMP,
-   is_active BOOLEAN,
-   PRIMARY KEY(source_id)
-);
 
 CREATE TABLE etl_execution(
    execution_id VARCHAR(255) DEFAULT gen_random_uuid(),
    started_at TIMESTAMP,
    ended_at TIMESTAMP,
    status BOOLEAN,
-   records_extracted BOOLEAN,
-   records_loaded BOOLEAN,
-   records_rejected BOOLEAN,
-   error_message VARCHAR(50),
-   triggered_by VARCHAR(50),
-   source_id VARCHAR(50) NOT NULL,
-   PRIMARY KEY(execution_id),
-   FOREIGN KEY(source_id) REFERENCES data_source(source_id)
+   records_extracted INT,
+   records_loaded INT,
+   records_rejected INT,
+   error_message TEXT,
+   PRIMARY KEY(execution_id)
 );
 
 CREATE TABLE data_quality_check_(
@@ -114,8 +100,8 @@ CREATE TABLE data_quality_check_(
    target_table VARCHAR(50),
    check_type VARCHAR(50),
    check_rule VARCHAR(50),
-   records_checked VARCHAR(50),
-   records_failed VARCHAR(50),
+   records_checked INT,
+   records_failed INT,
    checked_at TIMESTAMP,
    status BOOLEAN,
    execution_id VARCHAR(255) NOT NULL,
@@ -129,7 +115,7 @@ CREATE TABLE data_anomaly(
    anomaly_table VARCHAR(50),
    field_name VARCHAR(50),
    record_identifier VARCHAR(50),
-   original_value VARCHAR(50),
+   original_value TEXT,
    detected_at TIMESTAMP,
    severity VARCHAR(50),
    is_resolved BOOLEAN,
