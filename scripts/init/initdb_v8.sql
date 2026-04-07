@@ -111,7 +111,7 @@ CREATE TABLE data_quality_check_(
    status BOOLEAN,
    execution_id VARCHAR(255) NOT NULL,
    PRIMARY KEY(check_id),
-   FOREIGN KEY(execution_id) REFERENCES etl_execution(execution_id) ON DELETE CASCADE
+   FOREIGN KEY(execution_id) REFERENCES etl_execution(execution_id)
 );
 
 CREATE TABLE data_anomaly(
@@ -128,8 +128,8 @@ CREATE TABLE data_anomaly(
    check_id VARCHAR(50),
    execution_id VARCHAR(50) NOT NULL,
    PRIMARY KEY(anomaly_id),
-   FOREIGN KEY(check_id) REFERENCES data_quality_check_(check_id) ON DELETE CASCADE,
-   FOREIGN KEY(execution_id) REFERENCES etl_execution(execution_id) ON DELETE CASCADE
+   FOREIGN KEY(check_id) REFERENCES data_quality_check_(check_id),
+   FOREIGN KEY(execution_id) REFERENCES etl_execution(execution_id)
 );
 
 CREATE TABLE role(
