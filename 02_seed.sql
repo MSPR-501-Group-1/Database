@@ -668,3 +668,97 @@ SET
   heart_rate_avg = EXCLUDED.heart_rate_avg,
   heart_rate_max = EXCLUDED.heart_rate_max,
   sleep_hours = EXCLUDED.sleep_hours;
+
+-- ============================================================
+-- v9 dynamic delta: data quality variability for dataviz ranges
+-- ============================================================
+
+INSERT INTO etl_execution (
+  execution_id,
+  name,
+  started_at,
+  ended_at,
+  status,
+  records_extracted,
+  records_loaded,
+  records_rejected,
+  error_message
+)
+SELECT
+  'ETL_DQ_' || to_char(gs.day_ref, 'YYYYMMDD') AS execution_id,
+  'DataQuality Daily',
+  (date_trunc('day', gs.day_ref) + interval '02:00:00')::timestamp AS started_at,
+  (date_trunc('day', gs.day_ref) + interval '02:20:00')::timestamp AS ended_at,
+  'LOADED',
+  (62000 + ((EXTRACT(DOY FROM gs.day_ref)::int % 7) * 1300))::int AS records_extracted,
+  (61000 + ((EXTRACT(DOY FROM gs.day_ref)::int % 7) * 1180))::int AS records_loaded,
+  (400 + ((EXTRACT(DOY FROM gs.day_ref)::int % 5) * 60))::int AS records_rejected,
+  NULL
+FROM generate_series(current_date - interval '59 days', current_date, interval '1 day') AS gs(day_ref)
+ON CONFLICT (execution_id) DO UPDATE
+SET
+  name = EXCLUDED.name,
+  started_at = EXCLUDED.started_at,
+  ended_at = EXCLUDED.ended_at,
+  status = EXCLUDED.status,
+  records_extracted = EXCLUDED.records_extracted,
+  records_loaded = EXCLUDED.records_loaded,
+  records_rejected = EXCLUDED.records_rejected,
+  error_message = EXCLUDED.error_message;
+
+INSERT INTO data_quality_check_ (
+  check_id,
+  target_table,
+  check_type,
+  check_rule,
+  records_checked,
+  records_failed,
+  checked_at,
+  status,
+  execution_id
+)
+SELECT
+  'CHK_DQ_' || to_char(gs.day_ref, 'YYYYMMDD') || '_' || tpl.suffix AS check_id,
+  tpl.target_table,
+  tpl.check_type,
+  tpl.check_rule,
+  (tpl.base_checked + ((EXTRACT(DOY FROM gs.day_ref)::int % 9) * 320))::int AS records_checked,
+  GREATEST(
+    0,
+    LEAST(
+      (tpl.base_checked + 6000),
+      ROUND(
+        (tpl.base_checked + ((EXTRACT(DOY FROM gs.day_ref)::int % 9) * 320))
+        * (
+          tpl.base_fail_ratio
+          + (((EXTRACT(DOY FROM gs.day_ref)::int % 11) - 5) * 0.0012)
+          + CASE
+              WHEN EXTRACT(DOW FROM gs.day_ref) IN (1, 2) THEN 0.018
+              WHEN EXTRACT(DOY FROM gs.day_ref)::int % 10 = 0 THEN 0.026
+              ELSE 0
+            END
+        )
+      )::int
+    )
+  ) AS records_failed,
+  (date_trunc('day', gs.day_ref) + tpl.check_time)::timestamp AS checked_at,
+  TRUE AS status,
+  'ETL_DQ_' || to_char(gs.day_ref, 'YYYYMMDD') AS execution_id
+FROM generate_series(current_date - interval '59 days', current_date, interval '1 day') AS gs(day_ref)
+CROSS JOIN (
+  VALUES
+    ('N', 'ingredient',   'NULL_CHECK',      'name IS NOT NULL',                   42000, 0.010, time '02:23:00'),
+    ('R', 'ingredient',   'RANGE_CHECK',     'calories_g BETWEEN 0 AND 900',       41000, 0.014, time '02:25:00'),
+    ('D', 'exercise',     'DUPLICATE_CHECK', 'DISTINCT exercise_id',                2800,  0.003, time '02:27:00'),
+    ('U', 'user_metrics', 'RANGE_CHECK',     'heart_rate_avg BETWEEN 30 AND 220',  36000, 0.012, time '02:29:00')
+) AS tpl(suffix, target_table, check_type, check_rule, base_checked, base_fail_ratio, check_time)
+ON CONFLICT (check_id) DO UPDATE
+SET
+  target_table = EXCLUDED.target_table,
+  check_type = EXCLUDED.check_type,
+  check_rule = EXCLUDED.check_rule,
+  records_checked = EXCLUDED.records_checked,
+  records_failed = EXCLUDED.records_failed,
+  checked_at = EXCLUDED.checked_at,
+  status = EXCLUDED.status,
+  execution_id = EXCLUDED.execution_id;
