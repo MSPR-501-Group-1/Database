@@ -21,7 +21,6 @@ INSERT INTO health_goal (goal_id, label, description) VALUES
 INSERT INTO ingredient (
   ingredient_id,
   name,
-  usda_name,
   category,
   nutriscore,
   calories_g,
@@ -33,16 +32,16 @@ INSERT INTO ingredient (
   protein_g,
   carbs_g
 ) VALUES
-  ('ING_001', 'Chicken',      'Chicken, broilers or fryers, breast, meat only, raw', 'MEAT',      'A', 1.65, 0.36,  0.0,  0.0, 74.0, 85.0, 31.0,  0.0),
-  ('ING_002', 'Broccoli',     'Broccoli, raw',                                       'VEGETABLE', 'A', 0.34, 0.04,  2.6,  0.7, 33.0,  0.0,  2.8,  7.0),
-  ('ING_003', 'Brown rice',   'Rice, brown, long-grain, raw',                        'GRAIN',     'B', 1.11, 0.09,  1.8,  0.4,  5.0,  0.0,  2.6, 23.0),
-  ('ING_004', 'Whole milk',   'Milk, whole, 3.25% milkfat, with added vitamin D',    'DAIRY',     'C', 0.61, 0.33,  0.0,  4.8, 44.0, 10.0,  3.2,  4.8),
-  ('ING_005', 'Banana',       'Bananas, raw',                                        'FRUIT',     'A', 0.89, 0.03,  2.6, 12.2,  1.0,  0.0,  1.1, 23.0),
-  ('ING_006', 'Salmon',       'Fish, salmon, Atlantic, wild, raw',                   'MEAT',      'A', 2.08, 1.30,  0.0,  0.0, 59.0, 63.0, 20.0,  0.0),
-  ('ING_007', 'Olive oil',    'Oil, olive, salad or cooking',                        'OTHER',     'D', 8.84,10.00,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0),
-  ('ING_008', 'Oats',         'Oats, raw',                                           'GRAIN',     'A', 3.89, 0.67, 10.6,  0.0,  2.0,  0.0, 16.9, 66.0),
-  ('ING_009', 'Greek yogurt', 'Yogurt, Greek, plain, whole milk',                    'DAIRY',     'A', 0.59, 0.04,  0.0,  3.2, 36.0,  5.0, 10.0,  3.6),
-  ('ING_010', 'Spinach',      'Spinach, raw',                                        'VEGETABLE', 'A', 0.23, 0.04,  2.2,  0.4, 79.0,  0.0,  2.9,  3.6);
+  ('ING_001', 'Chicken Breast', 'MEAT',      'A', 1.65, 0.36,  0.0,  0.0, 74.0, 85.0, 31.0,  0.0),
+  ('ING_002', 'Broccoli',       'VEGETABLE', 'A', 0.34, 0.04,  2.6,  0.7, 33.0,  0.0,  2.8,  7.0),
+  ('ING_003', 'Brown Rice',     'GRAIN',     'B', 1.11, 0.09,  1.8,  0.4,  5.0,  0.0,  2.6, 23.0),
+  ('ING_004', 'Whole Milk',     'DAIRY',     'C', 0.61, 0.33,  0.0,  4.8, 44.0, 10.0,  3.2,  4.8),
+  ('ING_005', 'Banana',         'FRUIT',     'A', 0.89, 0.03,  2.6, 12.2,  1.0,  0.0,  1.1, 23.0),
+  ('ING_006', 'Salmon',         'MEAT',      'A', 2.08, 1.30,  0.0,  0.0, 59.0, 63.0, 20.0,  0.0),
+  ('ING_007', 'Olive Oil',      'OTHER',     'D', 8.84,10.00,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0),
+  ('ING_008', 'Oats',           'GRAIN',     'A', 3.89, 0.67, 10.6,  0.0,  2.0,  0.0, 16.9, 66.0),
+  ('ING_009', 'Greek Yogurt',   'DAIRY',     'A', 0.59, 0.04,  0.0,  3.2, 36.0,  5.0, 10.0,  3.6),
+  ('ING_010', 'Spinach',        'VEGETABLE', 'A', 0.23, 0.04,  2.2,  0.4, 79.0,  0.0,  2.9,  3.6);
 
 -- ============================================================
 -- recipe
