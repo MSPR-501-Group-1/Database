@@ -53,6 +53,7 @@ CREATE TABLE health_goal(
 CREATE TABLE ingredient(
    ingredient_id VARCHAR(255) DEFAULT gen_random_uuid(),
    name VARCHAR(255),
+   usda_name VARCHAR(255),
    category ingredient_category_enum,
    nutriscore nutriscore_enum,
    -- Valeurs nutritionnelles pour 100g
