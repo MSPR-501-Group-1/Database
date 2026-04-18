@@ -251,3 +251,8 @@ CREATE TABLE workout_session_exercise(
    FOREIGN KEY(session_id) REFERENCES workout_session(session_id),
    FOREIGN KEY(exercise_id) REFERENCES exercise(exercise_id)
 );
+
+-- INDEXES ------------------------------------------------
+
+CREATE INDEX IF NOT EXISTS idx_login_history_last_login_user_id
+   ON login_history (last_login DESC, user_id);

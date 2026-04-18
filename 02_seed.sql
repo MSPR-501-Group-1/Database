@@ -885,6 +885,9 @@ SET
   check_id = EXCLUDED.check_id,
   execution_id = EXCLUDED.execution_id;
 
+-- Refresh planner statistics after large seed inserts.
+ANALYZE login_history;
+
 -- ============================================================
 -- v11 dynamic delta: richer anomalies for correction workflow tests
 -- ============================================================
