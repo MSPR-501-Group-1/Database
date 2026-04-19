@@ -1,16 +1,28 @@
-# Organisation du dossier Database
+# Database
 
-Dans Looping -> On a les itérations des loopings versionées
+Scripts SQL, versions de schema et documentation de la base PostgreSQL MSPR.
 
-Dans scripts -> On a les itérations des scripts (init / seed) versionnées
+## Structure rapide
 
-A la racine -> On a le initdb et seed qui sont utilisés par le docker-compose. Si il faut les update, pensez à garder les même noms précisement et à versionner vos fichiers.
+- Looping/: iterations des modeles Looping versionnees
+- scripts/: scripts SQL versionnes (init / seed)
+- 01_initdb.sql et 02_seed.sql: scripts utilises par le docker compose racine
 
----
----
----
+## Usage avec Docker (recommande)
 
-# 🐘 Installation PostgreSQL & pgAdmin4 — Base de données MSPR
+La base est demarree automatiquement depuis la racine du projet:
+
+```bash
+docker compose up --build db
+```
+
+PostgreSQL est expose sur localhost:5432.
+
+## Installation manuelle PostgreSQL et pgAdmin4
+
+Le guide detaille ci-dessous reste disponible pour une installation hors Docker.
+
+# Installation PostgreSQL & pgAdmin4 - Base de donnees MSPR
 
 Ce guide explique comment installer **PostgreSQL** et **pgAdmin4**, puis créer et initialiser la base de données **MSPR** à partir du script SQL fourni.
 
